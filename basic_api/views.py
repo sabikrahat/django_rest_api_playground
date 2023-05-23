@@ -12,3 +12,29 @@ def check(request):
 
     elif request.method == 'POST':
         return Response(response_data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET', 'POST'])
+def addition(request):
+    if request.method == 'GET':
+        response_data = {'status': True, 'message': 'Addition Function executed without any data...!', 'data': None, }
+        return Response(response_data, status=status.HTTP_200_OK)
+
+    elif request.method == 'POST':
+        try:
+            num1 = request.data['num1']
+            num2 = request.data['num2']
+
+            res = int(num1) + int(num2)
+
+            response_data = {"success": True,
+                            "message": "Successfully solved the equation",
+                            "result": res,}
+
+            return Response(response_data, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            response_data = {"success": False,
+                            "message": "Error: " + str(e),
+                            "result": None}
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
