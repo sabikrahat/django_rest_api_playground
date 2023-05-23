@@ -29,12 +29,38 @@ def addition(request):
 
             response_data = {"success": True,
                             "message": "Successfully solved the equation",
-                            "result": res,}
+                            "data": res,}
 
             return Response(response_data, status=status.HTTP_200_OK)
 
         except Exception as e:
             response_data = {"success": False,
                             "message": "Error: " + str(e),
-                            "result": None}
+                            "data": None}
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'POST'])
+def addition_list(request):
+    if request.method == 'GET':
+        response_data = {'status': True, 'message': 'Addition Function executed without any data...!', 'data': None, }
+        return Response(response_data, status=status.HTTP_200_OK)
+
+    elif request.method == 'POST':
+        try:
+            list = request.data['num']
+
+            res = 0
+            for i in list:
+                res += int(i)
+
+            response_data = {"success": True,
+                            "message": "Successfully solved the equation",
+                            "data": res,}
+
+            return Response(response_data, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            response_data = {"success": False,
+                            "message": "Error: " + str(e),
+                            "data": None}
             return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
