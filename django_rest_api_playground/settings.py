@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # installed app
     'basic_api',
+    'auth_api',
     # 3rd party app
     'rest_framework',
 ]
@@ -83,9 +84,17 @@ WSGI_APPLICATION = 'django_rest_api_playground.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "django_rest_api_playground",
+        "USER": "postgres",
+        "PASSWORD": "72428",
+        "HOST": "127.0.0.1",
+        "PORT": "5432",
     }
 }
 

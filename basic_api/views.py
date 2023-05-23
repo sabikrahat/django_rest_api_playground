@@ -6,7 +6,7 @@ from rest_framework.response import Response
 # Create your views here.
 @api_view(['GET', 'POST'])
 def check(request):
-    response_data = {'status': True, 'message': 'Connected Successfully...!', 'data': None, }
+    response_data = {'status': True, 'message': 'Basic Api Connected Successfully...!', 'data': None, }
     if request.method == 'GET':
         return Response(response_data, status=status.HTTP_200_OK)
 
