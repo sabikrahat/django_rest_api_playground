@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'blog_api',
     # 3rd party app
     'rest_framework',
+    'rest_framework_simplejwt.token_blacklist', # for logout token blacklist
 ]
 
 MIDDLEWARE = [

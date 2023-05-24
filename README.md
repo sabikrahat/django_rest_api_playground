@@ -23,5 +23,6 @@
 - add these two apps in INSTALLED_APPS section
 	- 'basic_api',
 	- 'rest_framework',
+	- 'rest_framework_simplejwt.token_blacklist', # for logout token blacklist
 
 - pip freeze > requirements.txt
