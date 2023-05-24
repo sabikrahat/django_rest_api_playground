@@ -243,7 +243,7 @@ def logout(request):
         try:
             refresh_token = request.data['refresh_token']
             token = RefreshToken(refresh_token)
-            # TODO: Add token to blacklist error handling
+            # !TODO: Add token to blacklist
             token.blacklist()
 
             response_data = {
