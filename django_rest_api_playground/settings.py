@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # installed app
     'basic_api',
     'auth_api',
+    'blog_api',
     # 3rd party app
     'rest_framework',
 ]
