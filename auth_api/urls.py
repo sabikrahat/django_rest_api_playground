@@ -9,9 +9,10 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('login', views.login, name='login'),
     path('login/', views.login, name='login'),
-    path('refresh_token', views.refresh_token, name='refresh_token'),
-    path('refresh_token/', views.refresh_token, name='refresh_token'),
+    path('refresh-token', views.refresh_token, name='refresh_token'),
+    path('refresh-token/', views.refresh_token, name='refresh_token'),
     path('logout', views.logout, name='logout'),
     path('logout/', views.logout, name='logout'),
-    path('blacklist/', TokenBlacklistView.as_view(), name='token_blacklist'),
+    path('verify-token', views.verify_token, name='verify_token'),
+    path('verify-token/', views.verify_token, name='verify_token'),
 ]

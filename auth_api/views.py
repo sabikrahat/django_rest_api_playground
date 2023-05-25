@@ -1,8 +1,11 @@
+from datetime import datetime
+
+import jwt
 from django.contrib.auth.hashers import check_password, make_password
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import OutstandingToken, RefreshToken
 
 from auth_api.models import User
 
@@ -233,8 +236,10 @@ def logout(request):
     elif request.method == 'POST':
         try:
             refresh_token = request.data['refresh_token']
-            token = RefreshToken(refresh_token)
-            token.blacklist()
+            token = OutstandingToken.objects.get(token=refresh_token)
+            if token is  not None:
+                print(token)
+                token.delete()
 
             response_data = {
                 "success": True,
@@ -254,4 +259,81 @@ def logout(request):
 # sample json to logout post api
 # {
 #    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4NDk2MDkyNiwiaWF0IjoxNjg0ODc0NTI2LCJqdGkiOiIxM2E0MDg3MmI4ZGE0MjRlYjQ5N2YzNDgxOTFiODBmMyIsInVzZXJfaWQiOjExfQ.i95a8407qkKiCr-CV8ulsLW8M5_JT3asKJD1lb3nRIQ"
+# }
+
+
+@api_view(['GET', 'POST'])
+def verify_token(request):
+
+    if request.method == 'GET':
+        response_data = {
+            'status': True,
+            'message': 'Verify Access Token Function executed without any data...!',
+            'data': None,
+            'token': None
+        }
+        return Response(response_data, status=status.HTTP_200_OK)
+    
+    elif request.method == 'POST':
+        try:
+            get_token = request.data.get('token')
+
+            if get_token is None:
+                response_data = {
+                    'success': False,
+                    'message': 'Access or Refresh token is required.',
+                    'data': None,
+                    'token': None
+                }
+                return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
+
+            token = jwt.decode(get_token, algorithms=['HS256'], options={"verify_signature": False})
+
+            expiration_time = datetime.fromtimestamp(token['exp'])
+            current_time = datetime.utcnow()
+            is_expired = current_time > expiration_time
+
+            if not is_expired:
+                user_id = token['user_id']
+                user = User.objects.get(id=user_id)
+                response_data = {
+                    'success': True,
+                    'message': 'Access token is valid.',
+                    'data': user.toJson(),
+                    'token': {
+                        'token-type': token['token_type'],
+                        'jti': token['jti'],
+                        'expiry_time': expiration_time,
+                        'created': datetime.fromtimestamp(token['iat']),
+                        'is_expired': is_expired,
+                    }
+                }
+                return Response(response_data, status=status.HTTP_200_OK)
+            else:
+                response_data = {
+                    'success': False,
+                    'message': 'Access token is invalid.',
+                    'data': None,
+                    'token': {
+                        'token-type': token['token_type'],
+                        'jti': token['jti'],
+                        'expiry_time': expiration_time,
+                        'created': datetime.fromtimestamp(token['iat']),
+                        'is_expired': is_expired,
+                    }
+                }
+                return Response(response_data, status=status.HTTP_401_UNAUTHORIZED)
+            
+        except Exception as e:
+            response_data = {
+                'success': False,
+                'message': 'Error: ' + str(e),
+                'data': None,
+                'token': None
+            }
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
+
+# sample json to verify post api
+# {
+#    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4NDk2MDkyNiwiaWF0IjoxNjg0ODc0NTI2LCJqdGkiOiIxM2E0MDg3MmI4ZGE0MjRlYjQ5N2YzNDgxOTFiODBmMyIsInVzZXJfaWQiOjExfQ.i95a8407qkKiCr-CV8ulsLW8M5_JT3asKJD1lb3nRIQ"
 # }
