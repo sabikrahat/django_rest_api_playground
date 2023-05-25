@@ -65,7 +65,6 @@ class User(AbstractBaseUser):
             "id": self.id,
             "username": self.username,
             "email": self.email,
-            "password": self.password,
             "phone": self.phone,
             "address": self.address,
             "name": self.name,
