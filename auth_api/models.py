@@ -5,6 +5,7 @@ from django.db import models
 class User(models.Model):
     id = models.AutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     username = models.CharField(max_length=50, unique=True, null=False)
     email = models.EmailField(max_length=100, unique=True, null=False)
     password = models.CharField(max_length=255, null=False)
@@ -36,5 +37,6 @@ class User(models.Model):
             "phone": self.phone,
             "address": self.address,
             "name": self.name,
-            "created_at": self.created_at
+            "created_at": self.created_at,
+            "updated_at": self.updated_at
         }

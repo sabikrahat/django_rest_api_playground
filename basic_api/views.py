@@ -9,7 +9,7 @@ def check(request):
 
     response_data = {
         'status': True,
-        'message': 'Basic Api Connected Successfully...!',
+        'message': 'Basic Api Server Connected Successfully...!',
         'data': None
     }
 

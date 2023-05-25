@@ -9,7 +9,7 @@ def check(request):
 
     response_data = {
         'status': True,
-        'message': 'Blog Api Server Connected Successfully...!',
+        'message': 'Root Api Server Connected Successfully...!',
         'data': None
     }
 

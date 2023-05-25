@@ -13,7 +13,7 @@ def check(request):
 
     response_data = {
         'status': True,
-        'message': 'Auth Api Connected Successfully...!',
+        'message': 'Auth Api Server Connected Successfully...!',
         'data': None
     }
 
