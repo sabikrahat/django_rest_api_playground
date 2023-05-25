@@ -36,10 +36,7 @@ def create(request):
     
     elif request.method == 'POST':
         try :
-            # Get the authenticated user from the request
             user = request.user
-            print(user)
-
             title = request.data['title']
             description = request.data['description']
             
