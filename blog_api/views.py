@@ -1,5 +1,7 @@
+from django.db import connection
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -70,11 +72,32 @@ def create(request):
 def posts(request):
     if request.method == 'GET':
         try :
-            blogs = Blog.objects.all().order_by('-created_at')
+            per_page = int(request.query_params.get('per-page', 10))
+            page_number = int(request.query_params.get('page', 1))
+            search_query = request.query_params.get('search', '')
+            
+            # Create a paginator object with the desired page size
+            paginator = PageNumberPagination()
+            paginator.page_size = per_page
+            paginator.page_query_param = 'page'
+
+
+            blogs = Blog.objects.order_by('-created_at')
+
+            if search_query:
+                print(search_query)
+                blogs = blogs.filter(title__icontains=search_query)
+
+            # Get the paginated result from the paginator
+            paginated_blogs = paginator.paginate_queryset(blogs, request)
+
+            if page_number < 1 or page_number > paginator.page.paginator.num_pages:
+                raise ValueError('Invalid page.')
+
             response_data = {
                 'status': True,
                 'message': 'Blogs Fetched Successfully...!',
-                'data': [blog.toJson() for blog in blogs]
+                'data': [blog.toJson() for blog in paginated_blogs]
             }
             return Response(response_data, status=status.HTTP_200_OK)
     
